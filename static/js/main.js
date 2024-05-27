@@ -12,11 +12,11 @@ function fetchBooks() {
                 const bookDiv = document.createElement('div');
                 bookDiv.className = 'book';
                 bookDiv.innerHTML = `
-                    <h2>${book.title}</h2>
-                    <p>Forfatter: ${book.author}</p>
-                    <p>ISBN: ${book.isbn}</p>
-                    <img src="/static/barcode/${book.number}.png" alt="Barcode">
-                    <button onclick="deleteBook(${book.number})">Slett</button>
+                    <h2>${book.Tittel}</h2>
+                    <p>Forfatter: ${book.Forfatter}</p>
+                    <p>ISBN: ${book.ISBN}</p>
+                    <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
+                    <button onclick="deleteBook(${book.Nummer})">Slett</button>
                 `;
                 booksDiv.appendChild(bookDiv);
             });
@@ -34,11 +34,11 @@ function searchBooks() {
                 const bookDiv = document.createElement('div');
                 bookDiv.className = 'book';
                 bookDiv.innerHTML = `
-                    <h2>${book.title}</h2>
-                    <p>Forfatter: ${book.author}</p>
-                    <p>ISBN: ${book.isbn}</p>
-                    <img src="/static/barcode/${book.number}.png" alt="Barcode">
-                    <button onclick="deleteBook(${book.number})">Slett</button>
+                    <h2>${book.Tittel}</h2>
+                    <p>Forfatter: ${book.Forfatter}</p>
+                    <p>ISBN: ${book.ISBN}</p>
+                    <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
+                    <button onclick="deleteBook(${book.Nummer})">Slett</button>
                 `;
                 booksDiv.appendChild(bookDiv);
             });
@@ -60,10 +60,10 @@ function addBook() {
     const number = document.getElementById('newNumber').value;
 
     const newBook = {
-        title: title,
-        author: author,
-        isbn: isbn,
-        number: parseInt(number)
+        Tittel: title,
+        Forfatter: author,
+        ISBN: isbn,
+        Nummer: parseInt(number)
     };
 
     fetch('/leggtilbok', {

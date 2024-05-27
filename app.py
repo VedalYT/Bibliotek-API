@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os
 
@@ -27,6 +27,10 @@ class Book(db.Model):
 
 with app.app_context():
     db.create_all()
+
+@app.route('/')
+def serve_index():
+    return render_template('index.html')
 
 @app.route('/bøker', methods=['GET'])
 def get_books():
