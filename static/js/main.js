@@ -11,12 +11,13 @@ function fetchBooks() {
             books.forEach(book => {
                 const bookDiv = document.createElement('div');
                 bookDiv.className = 'book';
+                bookDiv.onclick = () => { window.location.href = `/bok.html?number=${book.Nummer}`; };
                 bookDiv.innerHTML = `
                     <h2>${book.Tittel}</h2>
                     <p>Forfatter: ${book.Forfatter}</p>
                     <p>ISBN: ${book.ISBN}</p>
                     <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
-                    <button onclick="deleteBook(${book.Nummer})">Slett</button>
+                    <button onclick="deleteBook(${book.Nummer}); event.stopPropagation();">Slett</button>
                 `;
                 booksDiv.appendChild(bookDiv);
             });
@@ -33,12 +34,13 @@ function searchBooks() {
             books.forEach(book => {
                 const bookDiv = document.createElement('div');
                 bookDiv.className = 'book';
+                bookDiv.onclick = () => { window.location.href = `/bok.html?number=${book.Nummer}`; };
                 bookDiv.innerHTML = `
                     <h2>${book.Tittel}</h2>
                     <p>Forfatter: ${book.Forfatter}</p>
                     <p>ISBN: ${book.ISBN}</p>
                     <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
-                    <button onclick="deleteBook(${book.Nummer})">Slett</button>
+                    <button onclick="deleteBook(${book.Nummer}); event.stopPropagation();">Slett</button>
                 `;
                 booksDiv.appendChild(bookDiv);
             });

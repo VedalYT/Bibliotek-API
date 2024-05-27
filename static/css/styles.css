@@ -1,3 +1,4 @@
+/* styles.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,29 +7,42 @@ body {
     background-color: #f4f4f4;
 }
 
-h1 {
+header {
     background-color: #4CAF50;
     color: white;
     padding: 20px;
     margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-#search {
-    margin: 20px;
+header h1 {
+    margin: 0;
+    cursor: pointer;
+}
+
+header input, header button {
+    margin: 0 10px;
+}
+
+header input {
     padding: 10px;
     width: 300px;
+    border: none;
+    border-radius: 5px;
 }
 
-button {
-    margin: 20px;
+header button {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-button:hover {
+header button:hover {
     background-color: #45a049;
 }
 
@@ -48,6 +62,7 @@ button:hover {
     width: 200px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s;
+    cursor: pointer;
 }
 
 .book:hover {
@@ -90,4 +105,25 @@ button:hover {
 #addBookForm button {
     margin: 10px 0;
     padding: 10px 20px;
+}
+
+/* Styles for book detail page */
+.book-detail {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-detail h2 {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+.book-detail p {
+    margin: 10px 0;
+    font-size: 18px;
 }

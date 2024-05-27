@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <h1>Bibliotek</h1>
-    <input type="text" id="search" placeholder="Søk etter bøker..." onkeyup="searchBooks()">
-    <button onclick="showAddBookForm()">Legg til bok</button>
+    <header>
+        <h1 onclick="fetchBooks()">Bibliotek</h1>
+        <input type="text" id="search" placeholder="Søk etter bøker..." onkeyup="searchBooks()">
+        <button onclick="showAddBookForm()">Legg til bok</button>
+    </header>
     <div id="books"></div>
     <div id="addBookForm" style="display: none;">
         <h2>Legg til ny bok</h2>

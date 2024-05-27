@@ -32,6 +32,10 @@ with app.app_context():
 def serve_index():
     return render_template('index.html')
 
+@app.route('/bok.html')
+def serve_book():
+    return render_template('bok.html')
+
 @app.route('/bøker', methods=['GET'])
 def get_books():
     books = Book.query.all()

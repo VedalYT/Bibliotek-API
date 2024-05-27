@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bokdetaljer</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='/'">Bibliotek</h1>
+    </header>
+    <div id="bookDetail" class="book-detail"></div>
+    <button id="deleteButton" onclick="deleteBook()">Slett</button>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookNumber = urlParams.get('number');
+            fetch(`/bok/${bookNumber}`)
+                .then(response => response.json())
+                .then(book => {
+                    const bookDetailDiv = document.getElementById('bookDetail');
+                    bookDetailDiv.innerHTML = `
+                        <h2>${book.Tittel}</h2>
+                        <p>Forfatter: ${book.Forfatter}</p>
+                        <p>ISBN: ${book.ISBN}</p>
+                        <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
+                        <p>Nummer: ${book.Nummer}</p>
+                    `;
+                });
+
+            document.getElementById('deleteButton').onclick = function() {
+                fetch(`/slettbok/${bookNumber}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(result => {
+                    alert(result.resultat);
+                    window.location.href = '/';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
