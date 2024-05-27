@@ -8,7 +8,18 @@
 </head>
 <body>
     <h1>Bibliotek</h1>
+    <input type="text" id="search" placeholder="Søk etter bøker..." onkeyup="searchBooks()">
+    <button onclick="showAddBookForm()">Legg til bok</button>
     <div id="books"></div>
+    <div id="addBookForm" style="display: none;">
+        <h2>Legg til ny bok</h2>
+        <input type="text" id="newTitle" placeholder="Tittel">
+        <input type="text" id="newAuthor" placeholder="Forfatter">
+        <input type="text" id="newISBN" placeholder="ISBN">
+        <input type="number" id="newNumber" placeholder="Nummer">
+        <button onclick="addBook()">Legg til</button>
+        <button onclick="hideAddBookForm()">Avbryt</button>
+    </div>
     <script src="/static/js/main.js"></script>
 </body>
 </html>

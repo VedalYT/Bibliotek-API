@@ -19,13 +19,12 @@ class Book(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'title': self.title,
-            'author': self.author,
-            'isbn': self.isbn,
-            'number': self.number
+            'Tittel': self.title,
+            'Forfatter': self.author,
+            'ISBN': self.isbn,
+            'Nummer': self.number
         }
 
-# Flytte opprettelsen av tabellene her
 with app.app_context():
     db.create_all()
 
@@ -60,13 +59,16 @@ def delete_book(number):
 @app.route('/leggtilbok', methods=['POST'])
 def add_book():
     new_book_data = request.get_json()
-    if Book.query.filter_by(number=new_book_data['number']).first():
+    print(f"Received new book data: {new_book_data}")
+    existing_book = Book.query.filter_by(number=new_book_data['Nummer']).first()
+    if existing_book:
+        print(f"Book with number {new_book_data['Nummer']} already exists: {existing_book.to_dict()}")
         return jsonify({'resultat': 'Boken finnes fra før'}), 400
     new_book = Book(
-        title=new_book_data['title'],
-        author=new_book_data['author'],
-        isbn=new_book_data['isbn'],
-        number=new_book_data['number']
+        title=new_book_data['Tittel'],
+        author=new_book_data['Forfatter'],
+        isbn=new_book_data['ISBN'],
+        number=new_book_data['Nummer']
     )
     db.session.add(new_book)
     db.session.commit()
