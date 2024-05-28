@@ -97,6 +97,8 @@ function deleteBook(number) {
 
 function setupBarcodeScanner() {
     const barcodeInput = document.getElementById('barcodeInput');
+    const searchInput = document.getElementById('search');
+    
     barcodeInput.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             const barcode = barcodeInput.value;
@@ -105,11 +107,15 @@ function setupBarcodeScanner() {
         }
     });
 
-    // Fokuser på det skjulte input-feltet for å fange opp strekkode-inndata
-    document.body.addEventListener('click', function() {
-        barcodeInput.focus();
+    // Fokuser på det skjulte input-feltet for å fange opp strekkode-inndata, unntatt når søkefeltet eller andre input-felter er fokusert
+    document.body.addEventListener('click', function(event) {
+        if (event.target !== searchInput && !event.target.closest('input')) {
+            barcodeInput.focus();
+        }
     });
 
-    // Fokuser på input-feltet når siden lastes
-    barcodeInput.focus();
+    // Fokuser på input-feltet når siden lastes, unntatt når søkefeltet eller andre input-felter er fokusert
+    if (document.activeElement !== searchInput && !document.activeElement.closest('input')) {
+        barcodeInput.focus();
+    }
 }
