@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetchBooks();
+    setupBarcodeScanner();
 });
 
 function fetchBooks() {
@@ -92,4 +93,23 @@ function deleteBook(number) {
         alert(result.resultat);
         fetchBooks();
     });
+}
+
+function setupBarcodeScanner() {
+    const barcodeInput = document.getElementById('barcodeInput');
+    barcodeInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const barcode = barcodeInput.value;
+            barcodeInput.value = ''; // Tøm input-feltet etter skanning
+            window.location.href = `/bok.html?number=${barcode}`;
+        }
+    });
+
+    // Fokuser på det skjulte input-feltet for å fange opp strekkode-inndata
+    document.body.addEventListener('click', function() {
+        barcodeInput.focus();
+    });
+
+    // Fokuser på input-feltet når siden lastes
+    barcodeInput.focus();
 }
