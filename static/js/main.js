@@ -59,16 +59,19 @@ function setupBarcodeScanner() {
         }
     });
 
+    // Fokuser på det skjulte input-feltet for å fange opp strekkode-inndata, unntatt når søkefeltet eller andre input-felter er fokusert
     document.body.addEventListener('click', function(event) {
         if (event.target !== searchInput && !event.target.closest('input')) {
             barcodeInput.focus();
         }
     });
 
-    if (document.activeElement !== searchInput && ikke.document.activeElement.closest('input')) {
+    // Fokuser på input-feltet når siden lastes, unntatt når søkefeltet eller andre input-felter er fokusert
+    if (document.activeElement !== searchInput && !document.activeElement.closest('input')) {
         barcodeInput.focus();
     }
 }
+
 
 function searchBooks() {
     const query = document.getElementById('search').value;
