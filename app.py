@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 import os
@@ -15,6 +16,8 @@ class Book(db.Model):
     author = db.Column(db.String(100), nullable=False)
     isbn = db.Column(db.String(13), nullable=False)
     number = db.Column(db.Integer, unique=True, nullable=False)
+    borrower_id = db.Column(db.Integer, db.ForeignKey('borrower.id'), nullable=True)
+    loan_date = db.Column(db.Date, nullable=True)
 
     def to_dict(self):
         return {
@@ -22,7 +25,9 @@ class Book(db.Model):
             'Tittel': self.title,
             'Forfatter': self.author,
             'ISBN': self.isbn,
-            'Nummer': self.number
+            'Nummer': self.number,
+            'LåntakerID': self.borrower_id,
+            'Utlånsdato': self.loan_date
         }
 
 class Borrower(db.Model):
@@ -49,6 +54,18 @@ def serve_index():
 @app.route('/bok.html')
 def serve_book():
     return render_template('bok.html')
+
+@app.route('/borrower.html')
+def serve_borrower():
+    return render_template('borrower.html')
+
+@app.route('/utlaan.html')
+def serve_loan():
+    return render_template('utlaan.html')
+
+@app.route('/innlevering.html')
+def serve_return():
+    return render_template('innlevering.html')
 
 @app.route('/bøker', methods=['GET'])
 def get_books():
@@ -81,10 +98,8 @@ def delete_book(number):
 @app.route('/leggtilbok', methods=['POST'])
 def add_book():
     new_book_data = request.get_json()
-    print(f"Received new book data: {new_book_data}")
     existing_book = Book.query.filter_by(number=new_book_data['Nummer']).first()
     if existing_book:
-        print(f"Book with number {new_book_data['Nummer']} already exists: {existing_book.to_dict()}")
         return jsonify({'resultat': 'Boken finnes fra før'}), 400
     new_book = Book(
         title=new_book_data['Tittel'],
@@ -108,9 +123,41 @@ def get_borrower(number):
         return jsonify(borrower.to_dict())
     return jsonify({'error': 'Låntaker ikke funnet'}), 404
 
-@app.route('/borrower.html')
-def serve_borrower():
-    return render_template('borrower.html')
+@app.route('/utlån', methods=['POST'])
+def loan_book():
+    data = request.get_json()
+    book_number = data['book_number']
+    borrower_number = data['borrower_number']
+    
+    book = Book.query.filter_by(number=book_number).first()
+    borrower = Borrower.query.filter_by(number=borrower_number).first()
+    
+    if book and borrower:
+        if book.borrower_id is not None:
+            return jsonify({'error': 'Boken er allerede utlånt'}), 400
+        book.borrower_id = borrower.id
+        book.loan_date = datetime.now().date()
+        db.session.commit()
+        return jsonify({'resultat': f"Boken '{book.title}' ble utlånt til {borrower.first_name} {borrower.last_name}"})
+    
+    return jsonify({'error': 'Bok eller låntaker ikke funnet'}), 404
+
+@app.route('/innlevering', methods=['POST'])
+def return_book():
+    data = request.get_json()
+    book_number = data['book_number']
+    
+    book = Book.query.filter_by(number=book_number).first()
+    
+    if book:
+        if book.borrower_id is None:
+            return jsonify({'error': 'Boken er ikke utlånt'}), 400
+        book.borrower_id = None
+        book.loan_date = None
+        db.session.commit()
+        return jsonify({'resultat': f"Boken '{book.title}' ble innlevert"})
+    
+    return jsonify({'error': 'Bok ikke funnet'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)

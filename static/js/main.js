@@ -96,22 +96,32 @@ function deleteBook(number) {
 }
 
 function fetchBorrowers() {
+    const borrowersDiv = document.getElementById('borrowers');
+    
     fetch('/låntakere')
         .then(response => response.json())
         .then(borrowers => {
-            const borrowersDiv = document.getElementById('borrowers');
             borrowersDiv.innerHTML = '';
             borrowers.forEach(borrower => {
                 const borrowerDiv = document.createElement('div');
                 borrowerDiv.className = 'borrower';
-                borrowerDiv.onclick = () => { window.location.href = `/låntaker.html?number=${borrower.Nummer}`; };
+                borrowerDiv.onclick = () => {
+                    window.location.href = `/borrower.html?number=${borrower.Nummer}`;
+                };
                 borrowerDiv.innerHTML = `
                     <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
-                    <p>Nummer: ${borrower.Nummer}</p>
                 `;
                 borrowersDiv.appendChild(borrowerDiv);
             });
+            // Vis listen og oppdater tilstanden
+            borrowersDiv.style.display = 'flex';
         });
+}
+
+function scrollToBorrowers() {
+    fetchBorrowers();
+    const borrowersDiv = document.getElementById('borrowers');
+    borrowersDiv.scrollIntoView({ behavior: 'instant' });
 }
 
 function setupBarcodeScanner() {
@@ -122,7 +132,7 @@ function setupBarcodeScanner() {
         if (event.key === 'Enter') {
             const barcode = barcodeInput.value;
             barcodeInput.value = ''; // Tøm input-feltet etter skanning
-            window.location.href = `/bok.html?number=${barcode}`;
+            window.location.href = `/borrower.html?number=${barcode}`;
         }
     });
 
@@ -138,6 +148,7 @@ function setupBarcodeScanner() {
         barcodeInput.focus();
     }
 }
+
 
 function fetchBorrowers() {
     fetch('/låntakere')
@@ -162,31 +173,29 @@ let borrowersListVisible = false;
 function fetchBorrowers() {
     const borrowersDiv = document.getElementById('borrowers');
     
-    if (borrowersListVisible) {
-        // Hvis listen er synlig, skjul den og oppdater tilstanden
-        borrowersDiv.style.display = 'none';
-        borrowersListVisible = false;
-    } else {
-        // Hvis listen er skjult, hent låntakere og vis listen
-        fetch('/låntakere')
-            .then(response => response.json())
-            .then(borrowers => {
-                borrowersDiv.innerHTML = '';
-                borrowers.forEach(borrower => {
-                    const borrowerDiv = document.createElement('div');
-                    borrowerDiv.className = 'borrower';
-                    borrowerDiv.onclick = () => {
-                        window.location.href = `/borrower.html?number=${borrower.Nummer}`;
-                    };
-                    borrowerDiv.innerHTML = `
-                        <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
-                    `;
-                    borrowersDiv.appendChild(borrowerDiv);
-                });
-                // Vis listen og oppdater tilstanden
-                borrowersDiv.style.display = 'flex';
-                borrowersListVisible = true;
+    fetch('/låntakere')
+        .then(response => response.json())
+        .then(borrowers => {
+            borrowersDiv.innerHTML = '';
+            borrowers.forEach(borrower => {
+                const borrowerDiv = document.createElement('div');
+                borrowerDiv.className = 'borrower';
+                borrowerDiv.onclick = () => {
+                    window.location.href = `/borrower.html?number=${borrower.Nummer}`;
+                };
+                borrowerDiv.innerHTML = `
+                    <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
+                `;
+                borrowersDiv.appendChild(borrowerDiv);
             });
-    }
+            // Vis listen og oppdater tilstanden
+            borrowersDiv.style.display = 'flex';
+            borrowersListVisible = true;
+        });
 }
 
+function scrollToBorrowers() {
+    fetchBorrowers();
+    const borrowersDiv = document.getElementById('borrowers');
+    borrowersDiv.scrollIntoView({ behavior: 'instant' });
+}

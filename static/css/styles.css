@@ -1,6 +1,5 @@
 /* styles.css */
 
-/* Fjern margin og padding fra body */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
@@ -8,13 +7,11 @@ body {
     text-align: center;
     background-color: #f5f5f5;
     color: #333;
-    height: 100vh; /* Legg til denne linjen for å sikre at body fyller hele høyden */
-
+    height: 100vh;
 }
 
-/* Fjern ekstra høyde fra html */
 html {
-    height: 100%; /* Legg til denne linjen for å sikre at html fyller hele høyden */
+    height: 100%;
 }
 
 header {
@@ -54,27 +51,29 @@ header input:focus {
 
 header button {
     padding: 10px 20px;
-    background-color: #ffca28;
+    margin: 0 5px;
+    background-color: #ff5722;
     color: white;
     border: none;
     border-radius: 25px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
+    font-size: 16px;
 }
 
 header button:hover {
-    background-color: #ffb300;
+    background-color: #e64a19;
     transform: scale(1.05);
 }
 
-#books {
+#books, #borrowers {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     margin: 20px;
 }
 
-.book {
+.book, .borrower {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -86,30 +85,30 @@ header button:hover {
     cursor: pointer;
 }
 
-.book:hover {
+.book:hover, .borrower:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.book h2 {
+.book h2, .borrower h2 {
     font-size: 18px;
     margin: 10px 0;
     color: #6a1b9a;
 }
 
-.book p {
+.book p, .borrower p {
     margin: 5px 0;
     color: #555;
 }
 
-.book img {
+.book img, .borrower img {
     width: 100%;
     height: auto;
     border-radius: 5px;
     transition: transform 0.3s ease;
 }
 
-.book img:hover {
+.book img:hover, .borrower img:hover {
     transform: scale(1.05);
 }
 
@@ -170,77 +169,39 @@ header button:hover {
     transform: scale(1.05);
 }
 
-/* Styles for borrowers list */
-.borrowers-list {
+.loan-process, .return-process {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    margin: 20px;
+    height: 100%;
+    margin: 0;
 }
 
-.borrower {
+.borrower-detail, .book-detail {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 10px;
     padding: 20px;
     margin: 10px;
-    width: 200px;
+    width: 300px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
 }
 
-.borrower:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.borrower h2 {
-    font-size: 18px;
-    margin: 10px 0;
-    color: #6a1b9a;
-}
-
-.borrower p {
-    margin: 5px 0;
-    color: #555;
-}
-
-.borrower img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-    transition: transform 0.3s ease;
-}
-
-.borrower img:hover {
-    transform: scale(1.05);
-}
-
-.borrower-detail {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 20px auto;
-    width: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-}
-
-.borrower-detail h2 {
+.borrower-detail h3, .book-detail h3 {
     font-size: 24px;
     margin: 10px 0;
     color: #6a1b9a;
 }
 
-.borrower-detail p {
+.borrower-detail p, .book-detail p {
     margin: 10px 0;
     font-size: 18px;
     color: #555;
 }
 
-.borrower-detail img {
+.borrower-detail img, .book-detail img {
     width: 100%;
     height: auto;
     border-radius: 5px;
@@ -248,6 +209,6 @@ header button:hover {
     transition: transform 0.3s ease;
 }
 
-.borrower-detail img:hover {
+.borrower-detail img:hover, .book-detail img:hover {
     transform: scale(1.05);
 }

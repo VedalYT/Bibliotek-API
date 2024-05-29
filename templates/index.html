@@ -10,9 +10,15 @@
     <header>
         <h1 onclick="fetchBooks()">Bibliotek</h1>
         <input type="text" id="search" placeholder="Søk etter bøker..." onkeyup="searchBooks()">
-        <button onclick="showAddBookForm()">Legg til bok</button>
+        <div class="header-buttons">
+            <button onclick="showAddBookForm()">Legg til bok</button>
+            <button onclick="scrollToBorrowers()">Se låntakere</button>
+            <button onclick="window.location.href='/utlaan.html'">Utlån</button>
+            <button onclick="window.location.href='/innlevering.html'">Innlevering</button>
+        </div>
     </header>
     <div id="books"></div>
+    <div id="borrowers" class="borrowers-list"></div>
     <div id="addBookForm" style="display: none;">
         <h2>Legg til ny bok</h2>
         <input type="text" id="newTitle" placeholder="Tittel">
@@ -22,12 +28,6 @@
         <button onclick="addBook()">Legg til</button>
         <button onclick="hideAddBookForm()">Avbryt</button>
     </div>
-    <!-- Ny seksjon for låntakere -->
-    <header>
-        <h1 onclick="fetchBorrowers()">Låntakere</h1>
-    </header>
-    <div id="borrowers" class="borrowers-list"></div>
-    <!-- Skjult input-felt for å fange opp strekkode -->
     <input type="text" id="barcodeInput" style="position: absolute; left: -9999px;">
     <script src="/static/js/main.js"></script>
 </body>

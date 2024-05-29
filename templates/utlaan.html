@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utlån av bok</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='/'">Bibliotek</h1>
+    </header>
+    <div id="loanProcess" class="loan-process">
+        <h2>Utlån av bok</h2>
+        <div id="borrowerDetail" class="borrower-detail"></div>
+        <div id="bookDetail" class="book-detail"></div>
+        <input type="text" id="barcodeInput" style="position: absolute; left: -9999px;">
+    </div>
+    <script>
+        let borrowerNumber = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setupBarcodeScanner();
+        });
+
+        function setupBarcodeScanner() {
+            const barcodeInput = document.getElementById('barcodeInput');
+            barcodeInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    const barcode = barcodeInput.value;
+                    barcodeInput.value = ''; // Tøm input-feltet etter skanning
+
+                    if (!borrowerNumber) {
+                        fetch(`/låntaker/${barcode}`)
+                            .then(response => response.json())
+                            .then(borrower => {
+                                borrowerNumber = barcode;
+                                const borrowerDetailDiv = document.getElementById('borrowerDetail');
+                                borrowerDetailDiv.innerHTML = `
+                                    <h3>${borrower.Fornavn} ${borrower.Etternavn}</h3>
+                                    <p>Nummer: ${borrower.Nummer}</p>
+                                    <img src="/static/bilder/${borrower.Nummer}.jpg" alt="Borrower Image">
+                                `;
+                            });
+                    } else {
+                        fetch(`/bok/${barcode}`)
+                            .then(response => response.json())
+                            .then(book => {
+                                const bookDetailDiv = document.getElementById('bookDetail');
+                                bookDetailDiv.innerHTML = `
+                                    <h3>${book.Tittel}</h3>
+                                    <p>Forfatter: ${book.Forfatter}</p>
+                                    <p>ISBN: ${book.ISBN}</p>
+                                    <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
+                                `;
+
+                                // Bekreft utlån
+                                confirmLoan(book.Nummer);
+                            });
+                    }
+                }
+            });
+
+            document.body.addEventListener('click', function() {
+                barcodeInput.focus();
+            });
+
+            barcodeInput.focus();
+        }
+
+        function confirmLoan(bookNumber) {
+            fetch('/utlån', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ book_number: bookNumber, borrower_number: borrowerNumber })
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.resultat);
+                window.location.href = '/';
+            });
+        }
+    </script>
+</body>
+</html>
