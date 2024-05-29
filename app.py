@@ -108,5 +108,9 @@ def get_borrower(number):
         return jsonify(borrower.to_dict())
     return jsonify({'error': 'Låntaker ikke funnet'}), 404
 
+@app.route('/borrower.html')
+def serve_borrower():
+    return render_template('borrower.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

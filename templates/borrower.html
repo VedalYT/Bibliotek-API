@@ -39,7 +39,7 @@
                 if (event.key === 'Enter') {
                     const barcode = barcodeInput.value;
                     barcodeInput.value = ''; // Tøm input-feltet etter skanning
-                    window.location.href = `/låntaker.html?number=${barcode}`;
+                    window.location.href = `/borrower.html?number=${barcode}`;
                 }
             });
 
