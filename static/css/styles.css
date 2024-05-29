@@ -245,3 +245,22 @@ header button:hover {
 .borrower-detail img:hover {
     transform: scale(1.05);
 }
+
+/* styles.css */
+
+/* Existing styles... */
+
+.book.loaned {
+    opacity: 0.5;
+    position: relative;
+}
+
+.book.loaned .loaned-text {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: red;
+    font-weight: bold;
+    font-size: 18px;
+}
