@@ -67,23 +67,7 @@ def serve_loan():
 def serve_return():
     return render_template('innlevering.html')
 
-@app.route('/ubetalte_lån', methods=['GET'])
-def unpaid_loans():
-    borrowers_with_loans = db.session.query(Borrower).join(Book).filter(Book.borrower_id.isnot(None)).all()
-    data = []
-    for borrower in borrowers_with_loans:
-        books = Book.query.filter_by(borrower_id=borrower.number).all()
-        data.append({
-            'Fornavn': borrower.first_name,
-            'Etternavn': borrower.last_name,
-            'Nummer': borrower.number,
-            'Bøker': [book.to_dict() for book in books]
-        })
-    return jsonify(data)
 
-@app.route('/ubetalte_lån.html')
-def serve_unpaid_loans():
-    return render_template('ubetalte_lån.html')
 
 @app.route('/bøker', methods=['GET'])
 def get_books():
