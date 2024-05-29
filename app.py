@@ -1,6 +1,7 @@
 from datetime import datetime
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import exists
 import os
 
 app = Flask(__name__)
@@ -51,6 +52,11 @@ with app.app_context():
 def serve_index():
     return render_template('index.html')
 
+@app.route('/unused_loans.html')
+def show_unused_loans():
+    return render_template('unused_loans.html')
+
+
 @app.route('/bok.html')
 def serve_book():
     return render_template('bok.html')
@@ -66,8 +72,6 @@ def serve_loan():
 @app.route('/innlevering.html')
 def serve_return():
     return render_template('innlevering.html')
-
-
 
 @app.route('/bøker', methods=['GET'])
 def get_books():
@@ -169,9 +173,20 @@ def return_book():
     
     return jsonify({'error': 'Bok ikke funnet'}), 404
 
+@app.route('/ubrukte_lån', methods=['GET'])
+def get_unused_loans():
+    borrowers_with_books = []
 
+    # Finn alle låntakere som har lånt minst én bok
+    borrowers = Borrower.query.join(Book).group_by(Borrower.id).all()
 
+    for borrower in borrowers:
+        # Hent bøkene lånt av denne låntakeren
+        books = Book.query.filter_by(borrower_id=borrower.id).all()
+        books_info = [{'title': book.title, 'author': book.author} for book in books]
+        borrowers_with_books.append({'borrower': borrower.to_dict(), 'books': books_info})
 
+    return render_template('unused_loans.html', unused_loans=borrowers_with_books)
 
 
 if __name__ == '__main__':

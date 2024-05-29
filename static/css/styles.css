@@ -77,6 +77,7 @@ header button:hover {
     flex-wrap: wrap;
     justify-content: center;
     margin: 20px;
+
 }
 
 .book, .borrower {
@@ -263,4 +264,33 @@ header button:hover {
     color: red;
     font-weight: bold;
     font-size: 18px;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.borrower {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.borrower h2 {
+    margin-top: 0;
+}
+
+.borrower p {
+    margin: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    margin-bottom: 5px;
 }

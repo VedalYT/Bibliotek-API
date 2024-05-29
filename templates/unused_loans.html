@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lånetakere son har lånt bøker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Lånetakere son har lånt bøker</h1>
+        <div class="unused-loans">
+            {% for loan in unused_loans %}
+                <div class="borrower">
+                    <h2>{{ loan.borrower.Fornavn }} {{ loan.borrower.Etternavn }}</h2>
+                    {% if loan.books %}
+                        <p>Books:</p>
+                        <ul>
+                            {% for book in loan.books %}
+                                <li>{{ book.Tittel }} by {{ book.Forfatter }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No books borrowed</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
