@@ -11,14 +11,14 @@
         <h1 onclick="window.location.href='/'">Bibliotek</h1>
     </header>
     <div id="loanProcess" class="loan-process">
-        <h2>Utlån av bok</h2>
         <div id="borrowerDetail" class="borrower-detail"></div>
-        <div id="bookDetail" class="book-detail"></div>
+        <h3>Tilgjengelige bøker:</h3>
+        <div id="availableBooks" class="available-books"></div>
         <input type="text" id="barcodeInput" style="position: absolute; left: -9999px;">
     </div>
     <script>
         let borrowerNumber = null;
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             setupBarcodeScanner();
         });
@@ -29,8 +29,8 @@
                 if (event.key === 'Enter') {
                     const barcode = barcodeInput.value;
                     barcodeInput.value = ''; // Tøm input-feltet etter skanning
-
-                    if (!borrowerNumber) {
+                    
+                    if (barcode >= 1000 && barcode <= 1020) {
                         fetch(`/låntaker/${barcode}`)
                             .then(response => response.json())
                             .then(borrower => {
@@ -41,22 +41,29 @@
                                     <p>Nummer: ${borrower.Nummer}</p>
                                     <img src="/static/bilder/${borrower.Nummer}.jpg" alt="Borrower Image">
                                 `;
+                                fetchAvailableBooks();
                             });
+                    } else if (barcode >= 1 && barcode <= 51) {
+                        if (borrowerNumber) {
+                            fetch(`/bok/${barcode}`)
+                                .then(response => response.json())
+                                .then(book => {
+                                    const bookDetailDiv = document.getElementById('availableBooks');
+                                    bookDetailDiv.innerHTML += `
+                                        <div class="book">
+                                            <h4>${book.Tittel}</h4>
+                                            <p>Forfatter: ${book.Forfatter}</p>
+                                            <p>ISBN: ${book.ISBN}</p>
+                                            <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
+                                        </div>
+                                    `;
+                                    confirmLoan(book.Nummer);
+                                });
+                        } else {
+                            alert("Skann låntakeren først.");
+                        }
                     } else {
-                        fetch(`/bok/${barcode}`)
-                            .then(response => response.json())
-                            .then(book => {
-                                const bookDetailDiv = document.getElementById('bookDetail');
-                                bookDetailDiv.innerHTML = `
-                                    <h3>${book.Tittel}</h3>
-                                    <p>Forfatter: ${book.Forfatter}</p>
-                                    <p>ISBN: ${book.ISBN}</p>
-                                    <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
-                                `;
-
-                                // Bekreft utlån
-                                confirmLoan(book.Nummer);
-                            });
+                        alert("Ugyldig strekkode.");
                     }
                 }
             });
@@ -66,6 +73,27 @@
             });
 
             barcodeInput.focus();
+        }
+
+        function fetchAvailableBooks() {
+            fetch('/ledige_bøker')
+                .then(response => response.json())
+                .then(books => {
+                    const booksDiv = document.getElementById('availableBooks');
+                    booksDiv.innerHTML = '';
+                    books.forEach(book => {
+                        const bookDiv = document.createElement('div');
+                        bookDiv.className = 'book';
+                        bookDiv.onclick = () => { confirmLoan(book.Nummer); };
+                        bookDiv.innerHTML = `
+                            <h4>${book.Tittel}</h4>
+                            <p>Forfatter: ${book.Forfatter}</p>
+                            <p>ISBN: ${book.ISBN}</p>
+                            <img src="/static/barcode/${book.Nummer}.png" alt="Barcode">
+                        `;
+                        booksDiv.appendChild(bookDiv);
+                    });
+                });
         }
 
         function confirmLoan(bookNumber) {
@@ -79,7 +107,7 @@
             .then(response => response.json())
             .then(result => {
                 alert(result.resultat);
-                window.location.href = '/';
+                fetchAvailableBooks(); // Update available books after loan
             });
         }
     </script>

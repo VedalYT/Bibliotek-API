@@ -132,7 +132,14 @@ function setupBarcodeScanner() {
         if (event.key === 'Enter') {
             const barcode = barcodeInput.value;
             barcodeInput.value = ''; // Tøm input-feltet etter skanning
-            window.location.href = `/borrower.html?number=${barcode}`;
+            
+            if (barcode >= 1 && barcode <= 51) {
+                // Redirect to book page
+                window.location.href = `/bok.html?number=${barcode}`;
+            } else if (barcode >= 1000 && barcode <= 1020) {
+                // Redirect to borrower page
+                window.location.href = `/borrower.html?number=${barcode}`;
+            } 
         }
     });
 
@@ -148,6 +155,13 @@ function setupBarcodeScanner() {
         barcodeInput.focus();
     }
 }
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetchBooks();
+    setupBarcodeScanner();
+});
 
 
 function fetchBorrowers() {

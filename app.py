@@ -69,8 +69,14 @@ def serve_return():
 
 @app.route('/bøker', methods=['GET'])
 def get_books():
-    books = Book.query.all()
+    books = Book.query.filter_by(borrower_id=None).all()
     return jsonify([book.to_dict() for book in books])
+
+@app.route('/ledige_bøker', methods=['GET'])
+def get_available_books():
+    books = Book.query.filter_by(borrower_id=None).all()
+    return jsonify([book.to_dict() for book in books])
+
 
 @app.route('/bok/<int:number>', methods=['GET'])
 def get_book(number):
@@ -124,23 +130,24 @@ def get_borrower(number):
     return jsonify({'error': 'Låntaker ikke funnet'}), 404
 
 @app.route('/utlån', methods=['POST'])
+@app.route('/utlån', methods=['POST'])
 def loan_book():
     data = request.get_json()
-    book_number = data['book_number']
-    borrower_number = data['borrower_number']
-    
+    book_number = data.get('book_number')
+    borrower_number = data.get('borrower_number')
+
     book = Book.query.filter_by(number=book_number).first()
-    borrower = Borrower.query.filter_by(number=borrower_number).first()
+    if not book:
+        return jsonify({'resultat': 'Bok ikke funnet'}), 404
+
+    book.borrower_id = borrower_number
+    book.loan_date = datetime.utcnow()
+    db.session.commit()
+
+    return jsonify({'resultat': f"{book.title} er lånt ut til låntaker {borrower_number}"})
+
     
-    if book and borrower:
-        if book.borrower_id is not None:
-            return jsonify({'error': 'Boken er allerede utlånt'}), 400
-        book.borrower_id = borrower.id
-        book.loan_date = datetime.now().date()
-        db.session.commit()
-        return jsonify({'resultat': f"Boken '{book.title}' ble utlånt til {borrower.first_name} {borrower.last_name}"})
-    
-    return jsonify({'error': 'Bok eller låntaker ikke funnet'}), 404
+
 
 @app.route('/innlevering', methods=['POST'])
 def return_book():

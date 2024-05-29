@@ -8,6 +8,7 @@ body {
     background-color: #f5f5f5;
     color: #333;
     height: 100vh;
+    overflow: auto;
 }
 
 html {
@@ -47,6 +48,11 @@ header input {
 
 header input:focus {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+header .header-buttons {
+    display: flex;
+    gap: 10px;
 }
 
 header button {
@@ -176,9 +182,31 @@ header button:hover {
     justify-content: center;
     height: 100%;
     margin: 0;
+    padding-top: 100px; /* Add padding to avoid overlapping with the header */
 }
 
-.borrower-detail, .book-detail {
+.available-books {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px;
+    gap: 20px;
+}
+
+.available-books .book {
+    width: 150px;
+    padding: 10px;
+}
+
+.borrower-details-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+.borrower-detail {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -187,28 +215,33 @@ header button:hover {
     width: 300px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
 }
 
-.borrower-detail h3, .book-detail h3 {
+.borrower-detail h3 {
     font-size: 24px;
     margin: 10px 0;
     color: #6a1b9a;
 }
 
-.borrower-detail p, .book-detail p {
+.borrower-detail p {
     margin: 10px 0;
     font-size: 18px;
     color: #555;
 }
 
-.borrower-detail img, .book-detail img {
-    width: 100%;
-    height: auto;
+.borrower-detail img {
+    width: auto;
+    height: 300px;
     border-radius: 5px;
     margin-bottom: 20px;
     transition: transform 0.3s ease;
 }
 
-.borrower-detail img:hover, .book-detail img:hover {
+.borrower-detail img.barcode-img {
+    height: 100px; /* Adjust barcode image size */
+}
+
+.borrower-detail img:hover {
     transform: scale(1.05);
 }

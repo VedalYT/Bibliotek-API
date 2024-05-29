@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Låntakerdetaljer</title>
+    <title>Låntaker Detaljer</title>
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
     <header>
         <h1 onclick="window.location.href='/'">Bibliotek</h1>
     </header>
-    <div id="borrowerDetail" class="borrower-detail"></div>
-    <!-- Skjult input-felt for å fange opp strekkode -->
+    <div id="borrowerDetails" class="borrower-details-container"></div>
     <input type="text" id="barcodeInput" style="position: absolute; left: -9999px;">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -20,12 +19,14 @@
             fetch(`/låntaker/${borrowerNumber}`)
                 .then(response => response.json())
                 .then(borrower => {
-                    const borrowerDetailDiv = document.getElementById('borrowerDetail');
-                    borrowerDetailDiv.innerHTML = `
-                        <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
-                        <p>Nummer: ${borrower.Nummer}</p>
-                        <img src="/static/bilder/${borrower.Nummer}.jpg" alt="Borrower Image">
-                        <img src="/static/barcode/${borrower.Nummer}.png" alt="Barcode">
+                    const borrowerDetailsDiv = document.getElementById('borrowerDetails');
+                    borrowerDetailsDiv.innerHTML = `
+                        <div class="borrower-detail">
+                            <h3>${borrower.Fornavn} ${borrower.Etternavn}</h3>
+                            <p>Nummer: ${borrower.Nummer}</p>
+                            <img src="/static/bilder/${borrower.Nummer}.jpg" alt="Borrower Image">
+                            <img src="/static/barcode/${borrower.Nummer}.png" alt="Barcode" class="barcode-img">
+                        </div>
                     `;
                 });
 
@@ -39,7 +40,14 @@
                 if (event.key === 'Enter') {
                     const barcode = barcodeInput.value;
                     barcodeInput.value = ''; // Tøm input-feltet etter skanning
-                    window.location.href = `/borrower.html?number=${barcode}`;
+
+                    if (barcode >= 1 && barcode <= 51) {
+                        window.location.href = `/bok.html?number=${barcode}`;
+                    } else if (barcode >= 1000 && barcode <= 1020) {
+                        window.location.href = `/borrower.html?number=${barcode}`;
+                    } else {
+                        alert("Ugyldig strekkode.");
+                    }
                 }
             });
 
