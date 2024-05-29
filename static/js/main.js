@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetchBooks();
+    fetchBorrowers();
     setupBarcodeScanner();
 });
 
@@ -21,6 +22,26 @@ function fetchBooks() {
                     <button onclick="deleteBook(${book.Nummer}); event.stopPropagation();">Slett</button>
                 `;
                 booksDiv.appendChild(bookDiv);
+            });
+        });
+}
+
+function fetchBorrowers() {
+    fetch('/låntakere')
+        .then(response => response.json())
+        .then(borrowers => {
+            const borrowersDiv = document.getElementById('borrowersList');
+            borrowersDiv.innerHTML = '';
+            borrowers.forEach(borrower => {
+                const borrowerDiv = document.createElement('div');
+                borrowerDiv.className = 'borrower';
+                borrowerDiv.onclick = () => { window.location.href = `/låntaker.html?number=${borrower.Nummer}`; };
+                borrowerDiv.innerHTML = `
+                    <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
+                    <p>Nummer: ${borrower.Nummer}</p>
+                    <img src="/static/barcode/${borrower.Nummer}.png" alt="Barcode">
+                `;
+                borrowersDiv.appendChild(borrowerDiv);
             });
         });
 }
@@ -103,7 +124,11 @@ function setupBarcodeScanner() {
         if (event.key === 'Enter') {
             const barcode = barcodeInput.value;
             barcodeInput.value = ''; // Tøm input-feltet etter skanning
-            window.location.href = `/bok.html?number=${barcode}`;
+            if (barcode >= 1000) {
+                window.location.href = `/låntaker.html?number=${barcode}`;
+            } else {
+                window.location.href = `/bok.html?number=${barcode}`;
+            }
         }
     });
 
