@@ -13,10 +13,6 @@
         <button onclick="showAddBookForm()">Legg til bok</button>
     </header>
     <div id="books"></div>
-    <div id="borrowers">
-        <h2>Låntakere</h2>
-        <div id="borrowersList"></div>
-    </div>
     <div id="addBookForm" style="display: none;">
         <h2>Legg til ny bok</h2>
         <input type="text" id="newTitle" placeholder="Tittel">
@@ -26,6 +22,7 @@
         <button onclick="addBook()">Legg til</button>
         <button onclick="hideAddBookForm()">Avbryt</button>
     </div>
+    <!-- Skjult input-felt for å fange opp strekkode -->
     <input type="text" id="barcodeInput" style="position: absolute; left: -9999px;">
     <script src="/static/js/main.js"></script>
 </body>

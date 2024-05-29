@@ -25,20 +25,6 @@ class Book(db.Model):
             'Nummer': self.number
         }
 
-class Borrower(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100), nullable=False)
-    number = db.Column(db.Integer, unique=True, nullable=False)
-
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'Fornavn': self.first_name,
-            'Etternavn': self.last_name,
-            'Nummer': self.number
-        }
-
 with app.app_context():
     db.create_all()
 
@@ -49,10 +35,6 @@ def serve_index():
 @app.route('/bok.html')
 def serve_book():
     return render_template('bok.html')
-
-@app.route('/låntaker.html')
-def serve_borrower():
-    return render_template('låntaker.html')
 
 @app.route('/bøker', methods=['GET'])
 def get_books():
@@ -99,44 +81,6 @@ def add_book():
     db.session.add(new_book)
     db.session.commit()
     return jsonify({'resultat': f"{new_book.title} ble registrert"})
-
-@app.route('/låntakere', methods=['GET'])
-def get_borrowers():
-    borrowers = Borrower.query.all()
-    return jsonify([borrower.to_dict() for borrower in borrowers])
-
-@app.route('/låntaker/<int:number>', methods=['GET'])
-def get_borrower(number):
-    borrower = Borrower.query.filter_by(number=number).first()
-    if borrower:
-        return jsonify(borrower.to_dict())
-    return jsonify({'error': 'Låntaker ikke funnet'}), 404
-
-@app.route('/slettlåntaker/<int:number>', methods=['DELETE'])
-def delete_borrower(number):
-    borrower = Borrower.query.filter_by(number=number).first()
-    if borrower is None:
-        return jsonify({'resultat': 'Låntaker finnes ikke i databasen'}), 404
-    db.session.delete(borrower)
-    db.session.commit()
-    return jsonify({'resultat': 'Låntaker ble slettet fra databasen'})
-
-@app.route('/leggtillåntaker', methods=['POST'])
-def add_borrower():
-    new_borrower_data = request.get_json()
-    print(f"Received new borrower data: {new_borrower_data}")
-    existing_borrower = Borrower.query.filter_by(number=new_borrower_data['Nummer']).first()
-    if existing_borrower:
-        print(f"Borrower with number {new_borrower_data['Nummer']} already exists: {existing_borrower.to_dict()}")
-        return jsonify({'resultat': 'Låntaker finnes fra før'}), 400
-    new_borrower = Borrower(
-        first_name=new_borrower_data['Fornavn'],
-        last_name=new_borrower_data['Etternavn'],
-        number=new_borrower_data['Nummer']
-    )
-    db.session.add(new_borrower)
-    db.session.commit()
-    return jsonify({'resultat': f"{new_borrower.first_name} {new_borrower.last_name} ble registrert"})
 
 if __name__ == '__main__':
     app.run(debug=True)
