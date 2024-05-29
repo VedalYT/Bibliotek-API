@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Låntakerdetaljer</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1 onclick="window.location.href='/'">Bibliotek</h1>
+    </header>
+    <div id="borrowerDetail" class="borrower-detail"></div>
+    <!-- Skjult input-felt for å fange opp strekkode -->
+    <input type="text" id="barcodeInput" style="position: absolute; left: -9999px;">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const borrowerNumber = urlParams.get('number');
+            fetch(`/låntaker/${borrowerNumber}`)
+                .then(response => response.json())
+                .then(borrower => {
+                    const borrowerDetailDiv = document.getElementById('borrowerDetail');
+                    borrowerDetailDiv.innerHTML = `
+                        <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
+                        <p>Nummer: ${borrower.Nummer}</p>
+                        <img src="/static/bilder/${borrower.Nummer}.jpg" alt="Borrower Image">
+                        <img src="/static/barcode/${borrower.Nummer}.png" alt="Barcode">
+                    `;
+                });
+
+            // Setup barcode scanner
+            setupBarcodeScanner();
+        });
+
+        function setupBarcodeScanner() {
+            const barcodeInput = document.getElementById('barcodeInput');
+            barcodeInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    const barcode = barcodeInput.value;
+                    barcodeInput.value = ''; // Tøm input-feltet etter skanning
+                    window.location.href = `/låntaker.html?number=${barcode}`;
+                }
+            });
+
+            // Fokuser på det skjulte input-feltet for å fange opp strekkode-inndata
+            document.body.addEventListener('click', function() {
+                barcodeInput.focus();
+            });
+
+            // Fokuser på input-feltet når siden lastes
+            barcodeInput.focus();
+        }
+    </script>
+</body>
+</html>

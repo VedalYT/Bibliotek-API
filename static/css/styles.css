@@ -1,5 +1,6 @@
 /* styles.css */
 
+/* Fjern margin og padding fra body */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
@@ -7,6 +8,13 @@ body {
     text-align: center;
     background-color: #f5f5f5;
     color: #333;
+    height: 100vh; /* Legg til denne linjen for å sikre at body fyller hele høyden */
+
+}
+
+/* Fjern ekstra høyde fra html */
+html {
+    height: 100%; /* Legg til denne linjen for å sikre at html fyller hele høyden */
 }
 
 header {
@@ -162,8 +170,54 @@ header button:hover {
     transform: scale(1.05);
 }
 
-/* Styles for book detail page */
-.book-detail {
+/* Styles for borrowers list */
+.borrowers-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px;
+}
+
+.borrower {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    width: 200px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.borrower:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.borrower h2 {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #6a1b9a;
+}
+
+.borrower p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.borrower img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+.borrower img:hover {
+    transform: scale(1.05);
+}
+
+.borrower-detail {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -174,29 +228,26 @@ header button:hover {
     transition: box-shadow 0.3s ease;
 }
 
-.book-detail h2 {
+.borrower-detail h2 {
     font-size: 24px;
     margin: 10px 0;
     color: #6a1b9a;
 }
 
-.book-detail p {
+.borrower-detail p {
     margin: 10px 0;
     font-size: 18px;
     color: #555;
 }
 
-.book-detail button {
-    padding: 10px 20px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+.borrower-detail img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
 }
 
-.book-detail button:hover {
-    background-color: #e53935;
+.borrower-detail img:hover {
     transform: scale(1.05);
 }

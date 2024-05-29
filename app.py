@@ -25,6 +25,20 @@ class Book(db.Model):
             'Nummer': self.number
         }
 
+class Borrower(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
+    number = db.Column(db.Integer, unique=True, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'Fornavn': self.first_name,
+            'Etternavn': self.last_name,
+            'Nummer': self.number
+        }
+
 with app.app_context():
     db.create_all()
 
@@ -81,6 +95,18 @@ def add_book():
     db.session.add(new_book)
     db.session.commit()
     return jsonify({'resultat': f"{new_book.title} ble registrert"})
+
+@app.route('/låntakere', methods=['GET'])
+def get_borrowers():
+    borrowers = Borrower.query.all()
+    return jsonify([borrower.to_dict() for borrower in borrowers])
+
+@app.route('/låntaker/<int:number>', methods=['GET'])
+def get_borrower(number):
+    borrower = Borrower.query.filter_by(number=number).first()
+    if borrower:
+        return jsonify(borrower.to_dict())
+    return jsonify({'error': 'Låntaker ikke funnet'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)

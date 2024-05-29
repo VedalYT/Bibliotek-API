@@ -95,6 +95,25 @@ function deleteBook(number) {
     });
 }
 
+function fetchBorrowers() {
+    fetch('/låntakere')
+        .then(response => response.json())
+        .then(borrowers => {
+            const borrowersDiv = document.getElementById('borrowers');
+            borrowersDiv.innerHTML = '';
+            borrowers.forEach(borrower => {
+                const borrowerDiv = document.createElement('div');
+                borrowerDiv.className = 'borrower';
+                borrowerDiv.onclick = () => { window.location.href = `/låntaker.html?number=${borrower.Nummer}`; };
+                borrowerDiv.innerHTML = `
+                    <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
+                    <p>Nummer: ${borrower.Nummer}</p>
+                `;
+                borrowersDiv.appendChild(borrowerDiv);
+            });
+        });
+}
+
 function setupBarcodeScanner() {
     const barcodeInput = document.getElementById('barcodeInput');
     const searchInput = document.getElementById('search');
@@ -118,4 +137,47 @@ function setupBarcodeScanner() {
     if (document.activeElement !== searchInput && !document.activeElement.closest('input')) {
         barcodeInput.focus();
     }
+}
+
+function fetchBorrowers() {
+    fetch('/låntakere')
+        .then(response => response.json())
+        .then(borrowers => {
+            const borrowersDiv = document.getElementById('borrowers');
+            borrowersDiv.innerHTML = '';
+            borrowers.forEach(borrower => {
+                const borrowerDiv = document.createElement('div');
+                borrowerDiv.className = 'borrower';
+                borrowerDiv.onclick = () => { window.location.href = `/låntaker.html?number=${borrower.Nummer}`; };
+                borrowerDiv.innerHTML = `
+                    <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
+                    <p>Nummer: ${borrower.Nummer}</p>
+                `;
+                borrowersDiv.appendChild(borrowerDiv);
+            });
+        });
+}
+function fetchBorrowers() {
+    fetch('/låntakere')
+        .then(response => response.json())
+        .then(borrowers => {
+            const borrowersDiv = document.getElementById('borrowers');
+            borrowersDiv.innerHTML = '';
+            borrowers.forEach(borrower => {
+                const borrowerDiv = document.createElement('div');
+                borrowerDiv.className = 'borrower';
+                borrowerDiv.onclick = () => {
+                    window.location.href = `/låntaker.html?number=${borrower.Nummer}`;
+                    
+                    borrowersDiv.style.display = 'none';
+                };
+                borrowerDiv.innerHTML = `
+                    <h2>${borrower.Fornavn} ${borrower.Etternavn}</h2>
+                    <p>Nummer: ${borrower.Nummer}</p>
+                    <img src="/static/bilder/${borrower.Nummer}.jpg" alt="Borrower Image">
+                    <img src="/static/barcode/${borrower.Nummer}.png" alt="Barcode">
+                `;
+                borrowersDiv.appendChild(borrowerDiv);
+            });
+        });
 }
